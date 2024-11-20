@@ -497,9 +497,9 @@ for such misuse, warnings are often not seen, and as often are not
 understood. No one has suggested a reason to allow implicit mention of
 non-static, uninitialized members in this context.</p>
 <h1 data-number="3" id="background"><span class="header-section-number">3</span> Background<a href="#background" class="self-link"></a></h1>
-<p>Access to the about-to-be constructed object’s storage in contract
-assertions on constructors is motivated by a desire to operate on
-addresses of subobjects, particularly mixins, that may need to be
+<p>Permitting access to the about-to-be constructed object’s storage in
+contract assertions on constructors is motivated by a desire to operate
+on addresses of subobjects, particularly mixins, that may need to be
 checked before initializing the object. Typically, the address of
 interest is derived by casting; <code class="sourceCode cpp"><span class="kw">static_cast</span><span class="op">&lt;</span>Mixin<span class="op">&gt;(</span><span class="kw">this</span><span class="op">)</span></code>
 provides a pointer value that may be offset from
@@ -527,32 +527,34 @@ function that may then improperly dereference the pointer, undetectably
 to the compiler.</p>
 <p>We do not find this example compelling; the UB in the called function
 is the responsibility of that function, but our reponsibility is to
-prevent a very obvious source of accidental UB.</p>
+prevent a very obvious source of accidental UB in precondition
+assertions themselves.</p>
 <p>Mentioning
 <code class="sourceCode cpp"><span class="kw">this</span></code> is very
 rare in typical users’ code, and attracts attention, where mentioning
 members by implicit reference, UB here, is extremely common, and does
 not.</p>
-<p>We underscore this by also preventing implicit access to non-static
-member functions of the class, which also assume the object had been
-constructed.</p>
+<p>We note further that mentioning non-static member functions in this
+context would also invite UB, as the implicit
+<code class="sourceCode cpp"><span class="kw">this</span></code> passed
+to such member functions is almost always used.</p>
 <h2 data-number="4.1" id="difference-with-initialization-lists"><span class="header-section-number">4.1</span> Difference with initialization
 lists<a href="#difference-with-initialization-lists" class="self-link"></a></h2>
-<p>Initialization lists do allow access to non-static class members.
-This is because it is up to the programmer to only access the nonstatic
-data members that have so far been constructed; it also allows using
-placement
-<code class="sourceCode cpp"><span class="kw">new</span></code> in the
-initialization list.</p>
+<p>Initialization lists do allow implicit access to non-static class
+members. It is up to the programmer to use only those data members that
+have so far been constructed. This unfixable source of potential UB is
+unfortunate, but there is anyway limited temptation to mention other
+members in that context.</p>
 <p>Contrast this to constructor preconditions: no data members have been
-constructed at that point. Requiring an explicit <code class="sourceCode cpp"><span class="kw">this</span><span class="op">-&gt;</span></code>
-to access them is not too onerous of a work-around to the restriction in
-the view of the authors, should the programmer really need to access
-them.</p>
+constructed at that point, so none may safely be used. Requiring an
+explicit <code class="sourceCode cpp"><span class="kw">this</span><span class="op">-&gt;</span></code>,
+if they must be mentioned, is not too onerous of a work-around in the
+view of the authors, should the programmer really need an uninitialized
+member’s address.</p>
 <h1 data-number="5" id="proposal"><span class="header-section-number">5</span> Proposal<a href="#proposal" class="self-link"></a></h1>
 <p>The solution is simple: make implicit access to non-static class
 members (both data and function) ill-formed in constructor preconditions
-and destructor postconditions, preserving access to
+and destructor postconditions, while preserving access to
 <code class="sourceCode cpp"><span class="kw">this</span></code>
 itself.</p>
 <p>In addition, the type of

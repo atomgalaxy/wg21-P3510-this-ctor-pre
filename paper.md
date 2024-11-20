@@ -53,9 +53,9 @@ non-static, uninitialized members in this context.
 
 # Background
 
-Access to the about-to-be constructed object's storage in contract
-assertions on constructors is motivated by a desire to operate on
-addresses of subobjects, particularly mixins, that may need to be
+Permitting access to the about-to-be constructed object's storage in
+contract assertions on constructors is motivated by a desire to operate
+on addresses of subobjects, particularly mixins, that may need to be
 checked before initializing the object.
 Typically, the address of interest is derived by casting;
 `static_cast<Mixin>(this)` provides a pointer value that may be
@@ -82,33 +82,38 @@ improperly dereference the pointer, undetectably to the compiler.
 
 We do not find this example compelling; the UB in the called
 function is the responsibility of that function, but our reponsibility
-is to prevent a very obvious source of accidental UB.
+is to prevent a very obvious source of accidental UB in precondition
+assertions themselves.
 
-Mentioning `this` is very rare in typical users' code, and attracts attention,
-where mentioning members by implicit reference, UB here, is extremely common,
-and does not.
+Mentioning `this` is very rare in typical users' code, and attracts
+attention, where mentioning members by implicit reference, UB here,
+is extremely common, and does not.
 
-We underscore this by also preventing implicit access to non-static
-member functions of the class, which also assume the object had been
-constructed.
+We note further that mentioning non-static member functions in this
+context would also invite UB, as the implicit `this` passed to such
+member functions is almost always used.
 
 ## Difference with initialization lists
 
-Initialization lists do allow access to non-static class members. This is
-because it is up to the programmer to only access the nonstatic data members
-that have so far been constructed; it also allows using placement `new` in the
-initialization list.
+Initialization lists do allow implicit access to non-static class
+members.
+It is up to the programmer to use only those data members that have
+so far been constructed.
+This unfixable source of potential UB is unfortunate, but there is
+anyway limited temptation to mention other members in that context. 
 
-Contrast this to constructor preconditions: no data members have been
-constructed at that point. Requiring an explicit `this->` to access them is not
-too onerous of a work-around to the restriction in the view of the authors,
-should the programmer really need to access them.
+Contrast this to constructor preconditions: no data members have
+been constructed at that point, so none may safely be used.
+Requiring an explicit `this->`, if they must be mentioned, is not
+too onerous of a work-around in the view of the authors, should the
+programmer really need an uninitialized member's address.
 
 # Proposal
 
-The solution is simple: make implicit access to non-static class members (both
-data and function) ill-formed in constructor preconditions and destructor
-postconditions, preserving access to `this` itself.
+The solution is simple: make implicit access to non-static class
+members (both data and function) ill-formed in constructor
+preconditions and destructor postconditions, while preserving
+access to `this` itself.
 
 In addition, the type of `this` should be `const X*`, not `X*`.
 
