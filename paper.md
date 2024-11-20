@@ -13,7 +13,7 @@ toc: true
 
 # Abstract
 
-In preconditions on constructors and post-conditions on destructors, all the
+In preconditions on constructors and postconditions on destructors, all the
 non-static data members of the class are uninitialized, and accessing them is
 undefined behaviour.
 
