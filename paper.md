@@ -1,6 +1,6 @@
 ---
 title: Leftover properties of `this` in constructor preconditions
-document: D3510R0
+document: P3510R1
 date: 2024-11-20
 audience: SG21
 author:
@@ -68,14 +68,14 @@ an operation forbidden to `constexpr` code.
 Similar access to addresses of members by implicit naming is not needed,
 and mention of such members is a source of unncecessary UB.
 
-[@P3174R0] goes on to provide access to such pointers in contract assertions
+[@P3172R0] goes on to provide access to such pointers in contract assertions
 on destructors, for more-or-less analagous reasons, and with a similar
 (albeit perhaps less attractive) hazard.
 
 
 # Analysis
 
-How did we get here? [@P3174R0] notes the UB hazard, in its section 2.3,
+How did we get here? [@P3124R0] notes the UB hazard, in its section 2.3,
 and asserts that containing the problem is unimplementable.
 It uses the example of passing `this` to a function that may then
 improperly dereference the pointer, undetectably to the compiler.
@@ -115,9 +115,11 @@ members (both data and function) ill-formed in constructor
 preconditions and destructor postconditions, while preserving
 access to `this` itself.
 
-In addition, the type of `this` should be `const X*`, not `X*`.
-
 # Wording
 
-TBD
+Add to [dcl.contract.func]
 
+A predicate of a precondition assertion of a constructor,
+and a predicate of a postcondition assertion on a destructor,
+shall not make implicit reference to a non-static member or
+sub-object (i.e. without `this->`).
