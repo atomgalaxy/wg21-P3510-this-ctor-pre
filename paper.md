@@ -75,7 +75,7 @@ on destructors, for more-or-less analagous reasons, and with a similar
 
 # Analysis
 
-How did we get here? [@P3124R0] notes the UB hazard, in its section 2.3,
+How did we get here? [@P3172R0] notes the UB hazard, in its section 2.3,
 and asserts that containing the problem is unimplementable.
 It uses the example of passing `this` to a function that may then
 improperly dereference the pointer, undetectably to the compiler.

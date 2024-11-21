@@ -519,7 +519,7 @@ such pointers in contract assertions on destructors, for more-or-less
 analagous reasons, and with a similar (albeit perhaps less attractive)
 hazard.</p>
 <h1 data-number="4" id="analysis"><span class="header-section-number">4</span> Analysis<a href="#analysis" class="self-link"></a></h1>
-<p>How did we get here? <span class="citation" data-cites="P3124R0">[<a href="https://wg21.link/p3124r0" role="doc-biblioref">P3124R0</a>]</span> notes the UB hazard, in its
+<p>How did we get here? <span class="citation" data-cites="P3172R0">[<a href="https://wg21.link/p3172r0" role="doc-biblioref">P3172R0</a>]</span> notes the UB hazard, in its
 section 2.3, and asserts that containing the problem is unimplementable.
 It uses the example of passing
 <code class="sourceCode cpp"><span class="kw">this</span></code> to a
@@ -568,9 +568,6 @@ implicit reference to a non-static member or sub-object (i.e. without
 <div id="ref-P2900R10" class="csl-entry" role="doc-biblioentry">
 [P2900R10] Joshua Berne, Timur Doumler, Andrzej Krzemieński. 2024-10-13.
 Contracts for C++. <a href="https://wg21.link/p2900r10"><div class="csl-block">https://wg21.link/p2900r10</div></a>
-</div>
-<div id="ref-P3124R0" class="csl-entry" role="doc-biblioentry">
-[P3124R0] 2024-06-14. 2024-02 Library Evolution Poll Outcomes. <a href="https://wg21.link/p3124r0"><div class="csl-block">https://wg21.link/p3124r0</div></a>
 </div>
 <div id="ref-P3172R0" class="csl-entry" role="doc-biblioentry">
 [P3172R0] Andrzej Krzemieński. 2024-03-08. Using `this` in constructor
