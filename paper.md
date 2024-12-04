@@ -117,9 +117,18 @@ access to `this` itself.
 
 # Wording
 
-Add to [dcl.contract.func]
+In [over.call.func] Add a new paragraph after p3:
 
-A predicate of a precondition assertion of a constructor,
-and a predicate of a postcondition assertion on a destructor,
-shall not make implicit reference to a non-static member or
-sub-object (i.e. without `this->`).
+    If an implied object argument `*this` relied upon in the predicate
+    of a precondition assertion of a constructor, or of a postcondition
+    assertion of a destructor, is the object being constructed or
+    destroyed, respectively, and a non-static member function is
+    selected, the program is ill-formed."
+
+At the end of [expr.prim.id.general] p2, add
+
+    If this transformation would be applied in a precondition of a
+    constructor of X, or a postcondition of a destructor of X, and
+    the implied `*this` refers to the object immediately constructed
+    or destroyed, respectively, the program is ill-formed."
+
