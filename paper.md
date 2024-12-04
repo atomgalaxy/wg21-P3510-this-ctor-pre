@@ -1,7 +1,7 @@
 ---
 title: Leftover properties of `this` in constructor preconditions
-document: P3510R1
-date: 2024-11-20
+document: P3510R2
+date: 2024-12-04
 audience: SG21
 author:
   - name: Nathan Myers
